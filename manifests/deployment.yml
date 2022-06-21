@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: adshafqatupworkpaymentapp 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: adshafqatupworkpaymentapp
+  template:
+    metadata:
+      labels:
+        app: adshafqatupworkpaymentapp 
+    spec:
+      containers:
+        - name: adshafqatupworkpaymentapp 
+          image: devadeelregistry.azurecr.io/adshafqatupworkpaymentapp
+          ports:
+          - containerPort: 8080
