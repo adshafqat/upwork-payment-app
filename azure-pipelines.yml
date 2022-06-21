@@ -1,0 +1,48 @@
+# Deploy to Azure Kubernetes Service
+# Build and push image to Azure Container Registry; Deploy to Azure Kubernetes Service
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+- main
+
+resources:
+- repo: self
+
+variables:
+
+  # Container registry service connection established during pipeline creation
+  dockerRegistryServiceConnection: '006f1d12-3da6-4887-8bd1-fc7b3dbcfb8c'
+  imageRepository: 'adshafqatupworkpaymentapp'
+  containerRegistry: 'devadeelregistry.azurecr.io'
+  dockerfilePath: '**/Dockerfile'
+  tag: '$(Build.BuildId)'
+  imagePullSecret: 'devadeelregistry64449712-auth'
+
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
+
+
+stages:
+- stage: Deploy
+  displayName: Deploy stage
+  dependsOn: Build
+  jobs:
+  - deployment: Deploy
+    displayName: Deploy
+    pool:
+      vmImage: $(vmImageName)
+    environment: 'adshafqatupworkpaymentapp.upwork-payment'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          
+          - task: HelmDeploy@0
+            inputs:
+              connectionType: 'Azure Resource Manager'
+              azureSubscription: 'Free Trial(e1f591b0-d808-4dd8-b6ba-8461cb8f7f52)'
+              azureResourceGroup: 'aks_group'
+              kubernetesCluster: 'aks'
+              useClusterAdmin: true
+              namespace: 'upwork-payment'
+              command: 'ls'
