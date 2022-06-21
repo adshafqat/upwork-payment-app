@@ -40,16 +40,8 @@ spec:
             value: http://service2.namespace
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 8080
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
           volumeMounts:
           - mountPath: /etc/config
             name: config
